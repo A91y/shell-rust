@@ -9,8 +9,16 @@ fn main() {
         print!("$ ");
         io::stdout().flush().unwrap();
         stdin.read_line(&mut input).unwrap();
-        input.pop();
-        println!("{}: command not found", input);
+        input.pop(); // Remove the newline character
+        let tokens: Vec<&str> = input.split(" ").collect();
+        match tokens[0].trim() {
+            "exit" => {
+                std::process::exit(tokens.get(1).unwrap_or(&"0").parse::<i32>().unwrap());
+            },
+            _ => {
+                println!("{}: command not found", tokens[0].trim());
+            }
+        }
         input.clear()
     }
 }
