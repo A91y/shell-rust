@@ -1,6 +1,7 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
 
+const BUILT_IN_COMMANDS: [&str; 3] = ["echo", "exit", "type"];
 fn main() {
     // Wait for user input
     let stdin = io::stdin();
@@ -18,7 +19,15 @@ fn main() {
             "echo" => {
                 println!("{}", tokens[1..].join(" "));
             }
-            _ => {
+            "type" => {
+                let command = tokens[1].trim();
+                if BUILT_IN_COMMANDS.contains(&command) {
+                    println!("{} is a shell builtin", command);
+                } else {
+                    println!("{}: not found", command);
+                }
+            }
+            _ => {  
                 println!("{}: command not found", tokens[0].trim());
             }
         }
