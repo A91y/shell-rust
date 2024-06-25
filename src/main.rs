@@ -2,7 +2,7 @@
 use std::io::{self, Write};
 use std::process::Command;
 
-const BUILT_IN_COMMANDS: [&str; 3] = ["echo", "exit", "type"];
+const BUILT_IN_COMMANDS: [&str; 4] = ["echo", "exit", "type", "pwd"];
 fn main() {
     // Wait for user input
     let stdin = io::stdin();
@@ -23,6 +23,9 @@ fn main() {
             }
             "type" => {
                 handle_type(&path_env, &tokens[1].trim());
+            }
+            "pwd" => {
+                println!("{}", std::env::current_dir().unwrap().to_str().unwrap());
             }
             _ => {
                 if tokens.len() == 1 && tokens[0].trim() == "" {
