@@ -30,7 +30,9 @@ fn main() {
             "cd" => {
                 let path = tokens.get(1).unwrap_or(&"").trim();
                 match path {
-                    "" => {
+                    "" => {}
+                    "~" => {
+                        std::env::set_current_dir(std::env::var("HOME").unwrap()).unwrap();
                     }
                     _ => {
                         if std::path::Path::new(path).exists() {
