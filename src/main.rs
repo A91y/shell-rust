@@ -6,6 +6,7 @@ fn main() {
     // Wait for user input
     let stdin = io::stdin();
     let mut input = String::new();
+    let path_env = std::env::var("PATH").unwrap();
     loop {
         print!("$ ");
         io::stdout().flush().unwrap();
@@ -20,17 +21,28 @@ fn main() {
                 println!("{}", tokens[1..].join(" "));
             }
             "type" => {
-                let command = tokens[1].trim();
-                if BUILT_IN_COMMANDS.contains(&command) {
-                    println!("{} is a shell builtin", command);
-                } else {
-                    println!("{}: not found", command);
-                }
+                handle_type(&path_env, &tokens[1].trim());
             }
-            _ => {  
+            _ => {
                 println!("{}: command not found", tokens[0].trim());
             }
         }
         input.clear()
+    }
+}
+
+fn handle_type(path: &str, cmd: &str) {
+    if BUILT_IN_COMMANDS.contains(&cmd) {
+        println!("{} is a shell builtin", cmd);
+    } else {
+        let dirs: Vec<&str> = path.split(":").collect();
+        for dir in dirs {
+            let path = format!("{}/{}", dir, cmd);
+            if std::path::Path::new(&path).exists() {
+                println!("{} is {}", cmd, path);
+                return;
+            }
+        }
+        println!("{}: not found", cmd);
     }
 }
