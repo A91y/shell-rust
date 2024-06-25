@@ -14,7 +14,10 @@ fn main() {
         match tokens[0].trim() {
             "exit" => {
                 std::process::exit(tokens.get(1).unwrap_or(&"0").parse::<i32>().unwrap());
-            },
+            }
+            "echo" => {
+                println!("{}", tokens[1..].join(" "));
+            }
             _ => {
                 println!("{}: command not found", tokens[0].trim());
             }
