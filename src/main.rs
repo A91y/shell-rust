@@ -32,13 +32,6 @@ fn main() {
                 match path {
                     "" => {
                     }
-                    ".." => {
-                        let mut path = std::env::current_dir().unwrap();
-                        path.pop();
-                        std::env::set_current_dir(path).unwrap();
-                    }
-                    "." => {
-                    }
                     _ => {
                         if std::path::Path::new(path).exists() {
                             std::env::set_current_dir(path).unwrap();
