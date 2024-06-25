@@ -2,7 +2,7 @@
 use std::io::{self, Write};
 use std::process::Command;
 
-const BUILT_IN_COMMANDS: [&str; 4] = ["echo", "exit", "type", "pwd"];
+const BUILT_IN_COMMANDS: [&str; 5] = ["echo", "exit", "type", "pwd", "cd"];
 fn main() {
     // Wait for user input
     let stdin = io::stdin();
@@ -26,6 +26,27 @@ fn main() {
             }
             "pwd" => {
                 println!("{}", std::env::current_dir().unwrap().to_str().unwrap());
+            }
+            "cd" => {
+                let path = tokens.get(1).unwrap_or(&"").trim();
+                match path {
+                    "" => {
+                    }
+                    ".." => {
+                        let mut path = std::env::current_dir().unwrap();
+                        path.pop();
+                        std::env::set_current_dir(path).unwrap();
+                    }
+                    "." => {
+                    }
+                    _ => {
+                        if std::path::Path::new(path).exists() {
+                            std::env::set_current_dir(path).unwrap();
+                        } else {
+                            println!("cd: {}: No such file or directory", path);
+                        }
+                    }
+                }
             }
             _ => {
                 if tokens.len() == 1 && tokens[0].trim() == "" {
